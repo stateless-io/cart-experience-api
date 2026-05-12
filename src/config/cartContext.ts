@@ -1,0 +1,1 @@
+export const DEFAULT_CART_CONTEXT_TTL_MS = 15 * 60 * 1000;
