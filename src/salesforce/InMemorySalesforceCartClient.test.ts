@@ -36,8 +36,7 @@ describe("InMemorySalesforceCartClient", () => {
 
   it("distinguishes a missing context from an expired context", async () => {
     await expect(client.getCart("ctx_missing")).rejects.toMatchObject({
-      code: ErrorCode.CartContextNotFound,
-      statusCode: 404
+      code: ErrorCode.CartContextNotFound
     });
   });
 
@@ -46,8 +45,7 @@ describe("InMemorySalesforceCartClient", () => {
     now = new Date("2026-05-12T18:01:00.000Z");
 
     await expect(client.getCart(created.contextId)).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired,
-      statusCode: 410
+      code: ErrorCode.CartContextExpired
     });
   });
 
@@ -106,22 +104,19 @@ describe("InMemorySalesforceCartClient", () => {
         unitPrice: 45
       })
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired,
-      statusCode: 410
+      code: ErrorCode.CartContextExpired
     });
     await expect(
       client.updateCartItemQuantity(created.contextId, "item_1", {
         quantity: 3
       })
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired,
-      statusCode: 410
+      code: ErrorCode.CartContextExpired
     });
     await expect(
       client.removeCartItem(created.contextId, "item_1")
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired,
-      statusCode: 410
+      code: ErrorCode.CartContextExpired
     });
 
     now = new Date("2026-05-12T18:00:30.000Z");
@@ -137,14 +132,12 @@ describe("InMemorySalesforceCartClient", () => {
         quantity: 2
       })
     ).rejects.toMatchObject({
-      code: ErrorCode.CartItemNotFound,
-      statusCode: 404
+      code: ErrorCode.CartItemNotFound
     });
     await expect(
       client.removeCartItem(created.contextId, "item_missing")
     ).rejects.toMatchObject({
-      code: ErrorCode.CartItemNotFound,
-      statusCode: 404
+      code: ErrorCode.CartItemNotFound
     });
   });
 });

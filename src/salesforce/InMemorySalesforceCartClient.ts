@@ -70,7 +70,7 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
     const itemExists = context.cart.items.some((item) => item.itemId === itemId);
 
     if (!itemExists) {
-      throw cartError(ErrorCode.CartItemNotFound, 404);
+      throw cartError(ErrorCode.CartItemNotFound);
     }
 
     context.cart = withItems(
@@ -93,7 +93,7 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
     );
 
     if (remainingItems.length === context.cart.items.length) {
-      throw cartError(ErrorCode.CartItemNotFound, 404);
+      throw cartError(ErrorCode.CartItemNotFound);
     }
 
     context.cart = withItems(context.cart, remainingItems);
@@ -105,11 +105,11 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
     const context = this.contexts.get(contextId);
 
     if (!context) {
-      throw cartError(ErrorCode.CartContextNotFound, 404);
+      throw cartError(ErrorCode.CartContextNotFound);
     }
 
     if (this.clock().getTime() >= Date.parse(context.expiresAt)) {
-      throw cartError(ErrorCode.CartContextExpired, 410);
+      throw cartError(ErrorCode.CartContextExpired);
     }
 
     return context;
@@ -146,6 +146,6 @@ function toResult(context: CartContext): CreateCartContextResult {
   };
 }
 
-function cartError(code: ErrorCode, statusCode: number): CartApiError {
-  return new CartApiError(code, errorMessages[code], statusCode);
+function cartError(code: ErrorCode): CartApiError {
+  return new CartApiError(code, errorMessages[code]);
 }

@@ -7,19 +7,8 @@ export const ErrorCode = {
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
 
-export type ErrorResponse = {
-  error: {
-    code: ErrorCode;
-    message: string;
-  };
-};
-
 export class CartApiError extends Error {
-  constructor(
-    readonly code: ErrorCode,
-    message: string,
-    readonly statusCode: number
-  ) {
+  constructor(readonly code: ErrorCode, message: string) {
     super(message);
     this.name = "CartApiError";
   }
