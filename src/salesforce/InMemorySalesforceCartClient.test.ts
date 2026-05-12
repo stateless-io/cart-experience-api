@@ -85,6 +85,28 @@ describe("InMemorySalesforceCartClient", () => {
     expect(removed.cart.totals).toEqual({ itemCount: 0, subtotal: 0 });
   });
 
+  it("appends distinct line items for duplicate productIds", async () => {
+    const created = await client.createCartContext();
+
+    await client.addCartItem(created.contextId, {
+      productId: "internet-1gb",
+      name: "1Gb Fiber Internet",
+      quantity: 1,
+      unitPrice: 80,
+    });
+
+    const result = await client.addCartItem(created.contextId, {
+      productId: "internet-1gb",
+      name: "1Gb Fiber Internet",
+      quantity: 2,
+      unitPrice: 80,
+    });
+
+    expect(result.cart.items).toHaveLength(2);
+    expect(result.cart.items[0].itemId).not.toBe(result.cart.items[1].itemId);
+    expect(result.cart.totals).toEqual({ itemCount: 3, subtotal: 240 });
+  });
+
   it("rejects mutations after expiry without mutating cart state", async () => {
     const created = await client.createCartContext();
     const added = await client.addCartItem(created.contextId, {

@@ -198,3 +198,18 @@ After cleanup, run:
 
 Implementation notes: removed unused/duplicated error status storage, added README
 setup/run/build/test documentation, and recorded accepted prompt-driven changes.
+
+### Duplicate Product Documentation
+
+```text
+The user proposed a few optional improvement suggestions:
+- add an inline comment documenting duplicate productId behavior,
+- add a focused test proving duplicate productIds append distinct line items,
+- clarify the Supertest sandbox/environment note.
+
+After review, the user instructed Claude to proceed and update the docs.
+```
+
+Implementation notes: documented duplicate `productId` behavior inline, added a
+focused Salesforce client test proving duplicate products append distinct line
+items, and clarified the README Supertest environment note.

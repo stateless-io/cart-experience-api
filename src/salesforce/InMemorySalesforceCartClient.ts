@@ -51,6 +51,8 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
     item: AddCartItemInput,
   ): Promise<CreateCartContextResult> {
     const context = this.getValidContext(contextId);
+
+    // Duplicate productIds append distinct line items instead of merging.
     const cartItem: CartItem = {
       itemId: `item_${this.nextItemNumber++}`,
       ...item,

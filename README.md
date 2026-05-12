@@ -30,8 +30,9 @@ npm test
 ```
 
 The route tests use the standard Express/Supertest pattern with `request(app)`.
-Some restricted sandboxes block Supertest's internal ephemeral listener binding;
-run the suite in a normal local environment if that occurs.
+Some restricted sandboxes may block Supertest's internal ephemeral listener
+binding with `EPERM` errors. This is an environment limitation, not an
+implementation issue. Run the suite in a normal local Node.js environment.
 
 ## Tradeoffs
 
