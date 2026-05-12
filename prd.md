@@ -98,7 +98,7 @@ Non-essential production concerns such as persistence, authentication, distribut
 
 ## Product Scope
 
-### MVP - Minimum Viable Product
+### Implementation Scope
 
 - Produce concise, implementation-ready `SPEC-A-architecture.md`.
 - Produce concrete endpoint contract spec in `SPEC-B-api.md`.

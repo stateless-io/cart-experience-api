@@ -1,7 +1,7 @@
 import type {
   AddCartItemInput,
   CreateCartContextResult,
-  UpdateCartItemQuantityInput
+  UpdateCartItemQuantityInput,
 } from "../domain/cart";
 
 export interface SalesforceCartClient {
@@ -9,15 +9,15 @@ export interface SalesforceCartClient {
   getCart(contextId: string): Promise<CreateCartContextResult>;
   addCartItem(
     contextId: string,
-    item: AddCartItemInput
+    item: AddCartItemInput,
   ): Promise<CreateCartContextResult>;
   updateCartItemQuantity(
     contextId: string,
     itemId: string,
-    update: UpdateCartItemQuantityInput
+    update: UpdateCartItemQuantityInput,
   ): Promise<CreateCartContextResult>;
   removeCartItem(
     contextId: string,
-    itemId: string
+    itemId: string,
   ): Promise<CreateCartContextResult>;
 }

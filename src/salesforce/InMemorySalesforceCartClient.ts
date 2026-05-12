@@ -5,7 +5,7 @@ import type {
   CartContext,
   CartItem,
   CreateCartContextResult,
-  UpdateCartItemQuantityInput
+  UpdateCartItemQuantityInput,
 } from "../domain/cart";
 import { CartApiError, ErrorCode, errorMessages } from "../domain/errors";
 import type { SalesforceCartClient } from "./SalesforceCartClient";
@@ -19,7 +19,7 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
 
   constructor(
     private readonly clock: Clock = () => new Date(),
-    private readonly ttlMs: number = DEFAULT_CART_CONTEXT_TTL_MS
+    private readonly ttlMs: number = DEFAULT_CART_CONTEXT_TTL_MS,
   ) {}
 
   async createCartContext(): Promise<CreateCartContextResult> {
@@ -33,8 +33,8 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
       cart: {
         contextId,
         items: [],
-        totals: deriveTotals([])
-      }
+        totals: deriveTotals([]),
+      },
     };
 
     this.contexts.set(contextId, context);
@@ -48,12 +48,12 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
 
   async addCartItem(
     contextId: string,
-    item: AddCartItemInput
+    item: AddCartItemInput,
   ): Promise<CreateCartContextResult> {
     const context = this.getValidContext(contextId);
     const cartItem: CartItem = {
       itemId: `item_${this.nextItemNumber++}`,
-      ...item
+      ...item,
     };
 
     context.cart = withItems(context.cart, [...context.cart.items, cartItem]);
@@ -64,10 +64,12 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
   async updateCartItemQuantity(
     contextId: string,
     itemId: string,
-    update: UpdateCartItemQuantityInput
+    update: UpdateCartItemQuantityInput,
   ): Promise<CreateCartContextResult> {
     const context = this.getValidContext(contextId);
-    const itemExists = context.cart.items.some((item) => item.itemId === itemId);
+    const itemExists = context.cart.items.some(
+      (item) => item.itemId === itemId,
+    );
 
     if (!itemExists) {
       throw cartError(ErrorCode.CartItemNotFound);
@@ -76,8 +78,8 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
     context.cart = withItems(
       context.cart,
       context.cart.items.map((item) =>
-        item.itemId === itemId ? { ...item, quantity: update.quantity } : item
-      )
+        item.itemId === itemId ? { ...item, quantity: update.quantity } : item,
+      ),
     );
 
     return toResult(context);
@@ -85,11 +87,11 @@ export class InMemorySalesforceCartClient implements SalesforceCartClient {
 
   async removeCartItem(
     contextId: string,
-    itemId: string
+    itemId: string,
   ): Promise<CreateCartContextResult> {
     const context = this.getValidContext(contextId);
     const remainingItems = context.cart.items.filter(
-      (item) => item.itemId !== itemId
+      (item) => item.itemId !== itemId,
     );
 
     if (remainingItems.length === context.cart.items.length) {
@@ -120,7 +122,7 @@ function withItems(cart: Cart, items: CartItem[]): Cart {
   return {
     contextId: cart.contextId,
     items,
-    totals: deriveTotals(items)
+    totals: deriveTotals(items),
   };
 }
 
@@ -129,8 +131,8 @@ function deriveTotals(items: CartItem[]) {
     itemCount: items.reduce((total, item) => total + item.quantity, 0),
     subtotal: items.reduce(
       (total, item) => total + item.quantity * item.unitPrice,
-      0
-    )
+      0,
+    ),
   };
 }
 
@@ -141,8 +143,8 @@ function toResult(context: CartContext): CreateCartContextResult {
     cart: {
       contextId: context.cart.contextId,
       items: context.cart.items.map((item) => ({ ...item })),
-      totals: { ...context.cart.totals }
-    }
+      totals: { ...context.cart.totals },
+    },
   };
 }
 

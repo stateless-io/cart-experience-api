@@ -10,8 +10,8 @@ export function validateBody(schema: ZodSchema): RequestHandler {
       res.status(400).json({
         error: {
           code: ErrorCode.ValidationError,
-          message: errorMessages[ErrorCode.ValidationError]
-        }
+          message: errorMessages[ErrorCode.ValidationError],
+        },
       });
       return;
     }

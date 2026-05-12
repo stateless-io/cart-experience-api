@@ -2,7 +2,7 @@
 sourceDocument: prd.md
 artifactType: api-contract
 project_name: Telecom Cart Experience API
-date: '2026-05-12'
+date: "2026-05-12"
 status: draft
 ---
 
@@ -260,4 +260,3 @@ Validation messages may be expanded with field-level details during implementati
 - Totals must be derived consistently after each mutation.
 - Expiry tests must not rely on wall-clock sleeping.
 - Missing context and expired context must remain distinguishable.
-

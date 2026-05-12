@@ -2,10 +2,7 @@ import type { Express, RequestHandler, Response } from "express";
 import { CartApiError, ErrorCode, errorMessages } from "../domain/errors";
 import { validateBody } from "../http/validation";
 import type { SalesforceCartClient } from "../salesforce/SalesforceCartClient";
-import {
-  addCartItemSchema,
-  updateCartItemQuantitySchema
-} from "./cartSchemas";
+import { addCartItemSchema, updateCartItemQuantitySchema } from "./cartSchemas";
 
 type CartRouteDependencies = {
   salesforceCartClient: SalesforceCartClient;
@@ -13,7 +10,7 @@ type CartRouteDependencies = {
 
 export function registerCartRoutes(
   app: Express,
-  { salesforceCartClient }: CartRouteDependencies
+  { salesforceCartClient }: CartRouteDependencies,
 ): void {
   app.post(
     "/cart-contexts",
@@ -21,7 +18,7 @@ export function registerCartRoutes(
       const result = await salesforceCartClient.createCartContext();
 
       res.status(201).json(result);
-    })
+    }),
   );
 
   app.get(
@@ -30,7 +27,7 @@ export function registerCartRoutes(
       const result = await salesforceCartClient.getCart(req.params.contextId);
 
       res.status(200).json(result);
-    })
+    }),
   );
 
   app.post(
@@ -39,11 +36,11 @@ export function registerCartRoutes(
     handle(async (req, res) => {
       const result = await salesforceCartClient.addCartItem(
         req.params.contextId,
-        req.body
+        req.body,
       );
 
       res.status(201).json(result);
-    })
+    }),
   );
 
   app.patch(
@@ -53,11 +50,11 @@ export function registerCartRoutes(
       const result = await salesforceCartClient.updateCartItemQuantity(
         req.params.contextId,
         req.params.itemId,
-        req.body
+        req.body,
       );
 
       res.status(200).json(result);
-    })
+    }),
   );
 
   app.delete(
@@ -65,11 +62,11 @@ export function registerCartRoutes(
     handle(async (req, res) => {
       const result = await salesforceCartClient.removeCartItem(
         req.params.contextId,
-        req.params.itemId
+        req.params.itemId,
       );
 
       res.status(200).json(result);
-    })
+    }),
   );
 }
 
@@ -90,8 +87,8 @@ function sendError(res: Response, error: unknown): boolean {
     res.status(statusFor(error.code)).json({
       error: {
         code: error.code,
-        message: errorMessages[error.code]
-      }
+        message: errorMessages[error.code],
+      },
     });
     return true;
   }

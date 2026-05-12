@@ -2,7 +2,7 @@
   "name": "telecom-cart-experience-api",
   "version": "0.1.0",
   "private": true,
-  "description": "Small Telecom Cart Experience API skeleton.",
+  "description": "Small Telecom Cart Experience API implementation.",
   "engines": {
     "node": ">=20"
   },

@@ -15,7 +15,9 @@ describe("cart routes", () => {
   // These are conventional Express/Supertest route tests. Supertest may bind
   // an internal ephemeral listener, which some restricted sandboxes block.
   it("creates and retrieves a cart context using the SPEC-B response shape", async () => {
-    const createResponse = await request(app).post("/cart-contexts").expect(201);
+    const createResponse = await request(app)
+      .post("/cart-contexts")
+      .expect(201);
     const { contextId, expiresAt } = createResponse.body;
 
     expect(createResponse.body).toEqual({
@@ -26,9 +28,9 @@ describe("cart routes", () => {
         items: [],
         totals: {
           itemCount: 0,
-          subtotal: 0
-        }
-      }
+          subtotal: 0,
+        },
+      },
     });
     expect(contextId).toMatch(/^ctx_\d+$/);
     expect(expiresAt).toBe("2026-05-12T18:15:00.000Z");
@@ -40,7 +42,9 @@ describe("cart routes", () => {
   });
 
   it("adds, updates, and removes an item through thin route handlers", async () => {
-    const createResponse = await request(app).post("/cart-contexts").expect(201);
+    const createResponse = await request(app)
+      .post("/cart-contexts")
+      .expect(201);
     const { contextId } = createResponse.body;
 
     const addResponse = await request(app)
@@ -49,7 +53,7 @@ describe("cart routes", () => {
         productId: "internet-1gb",
         name: "1Gb Fiber Internet",
         quantity: 1,
-        unitPrice: 80
+        unitPrice: 80,
       })
       .expect(201);
     const { itemId } = addResponse.body.cart.items[0];
@@ -60,12 +64,12 @@ describe("cart routes", () => {
         productId: "internet-1gb",
         name: "1Gb Fiber Internet",
         quantity: 1,
-        unitPrice: 80
-      }
+        unitPrice: 80,
+      },
     ]);
     expect(addResponse.body.cart.totals).toEqual({
       itemCount: 1,
-      subtotal: 80
+      subtotal: 80,
     });
     expect(itemId).toMatch(/^item_\d+$/);
 
@@ -77,7 +81,7 @@ describe("cart routes", () => {
     expect(updateResponse.body.cart.items[0]).toMatchObject({ quantity: 2 });
     expect(updateResponse.body.cart.totals).toEqual({
       itemCount: 2,
-      subtotal: 160
+      subtotal: 160,
     });
 
     const removeResponse = await request(app)
@@ -87,12 +91,14 @@ describe("cart routes", () => {
     expect(removeResponse.body.cart.items).toEqual([]);
     expect(removeResponse.body.cart.totals).toEqual({
       itemCount: 0,
-      subtotal: 0
+      subtotal: 0,
     });
   });
 
   it("returns VALIDATION_ERROR for invalid request bodies", async () => {
-    const createResponse = await request(app).post("/cart-contexts").expect(201);
+    const createResponse = await request(app)
+      .post("/cart-contexts")
+      .expect(201);
     const { contextId } = createResponse.body;
 
     await request(app)
@@ -101,14 +107,14 @@ describe("cart routes", () => {
         productId: "",
         name: "1Gb Fiber Internet",
         quantity: 0,
-        unitPrice: 80
+        unitPrice: 80,
       })
       .expect(400)
       .expect({
         error: {
           code: ErrorCode.ValidationError,
-          message: errorMessages[ErrorCode.ValidationError]
-        }
+          message: errorMessages[ErrorCode.ValidationError],
+        },
       });
   });
 
@@ -119,11 +125,13 @@ describe("cart routes", () => {
       .expect({
         error: {
           code: ErrorCode.CartContextNotFound,
-          message: errorMessages[ErrorCode.CartContextNotFound]
-        }
+          message: errorMessages[ErrorCode.CartContextNotFound],
+        },
       });
 
-    const createResponse = await request(app).post("/cart-contexts").expect(201);
+    const createResponse = await request(app)
+      .post("/cart-contexts")
+      .expect(201);
     const { contextId } = createResponse.body;
 
     await request(app)
@@ -133,13 +141,15 @@ describe("cart routes", () => {
       .expect({
         error: {
           code: ErrorCode.CartItemNotFound,
-          message: errorMessages[ErrorCode.CartItemNotFound]
-        }
+          message: errorMessages[ErrorCode.CartItemNotFound],
+        },
       });
   });
 
   it("maps expired context errors to 410 for reads and mutations", async () => {
-    const createResponse = await request(app).post("/cart-contexts").expect(201);
+    const createResponse = await request(app)
+      .post("/cart-contexts")
+      .expect(201);
     const { contextId } = createResponse.body;
 
     jest.setSystemTime(new Date("2026-05-12T18:15:00.000Z"));
@@ -147,8 +157,8 @@ describe("cart routes", () => {
     const expiredError = {
       error: {
         code: ErrorCode.CartContextExpired,
-        message: errorMessages[ErrorCode.CartContextExpired]
-      }
+        message: errorMessages[ErrorCode.CartContextExpired],
+      },
     };
 
     await request(app)
@@ -162,7 +172,7 @@ describe("cart routes", () => {
         productId: "mobile-unlimited",
         name: "Unlimited Mobile",
         quantity: 1,
-        unitPrice: 45
+        unitPrice: 45,
       })
       .expect(410)
       .expect(expiredError);

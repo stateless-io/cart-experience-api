@@ -22,9 +22,9 @@ describe("InMemorySalesforceCartClient", () => {
         items: [],
         totals: {
           itemCount: 0,
-          subtotal: 0
-        }
-      }
+          subtotal: 0,
+        },
+      },
     });
   });
 
@@ -36,7 +36,7 @@ describe("InMemorySalesforceCartClient", () => {
 
   it("distinguishes a missing context from an expired context", async () => {
     await expect(client.getCart("ctx_missing")).rejects.toMatchObject({
-      code: ErrorCode.CartContextNotFound
+      code: ErrorCode.CartContextNotFound,
     });
   });
 
@@ -45,7 +45,7 @@ describe("InMemorySalesforceCartClient", () => {
     now = new Date("2026-05-12T18:01:00.000Z");
 
     await expect(client.getCart(created.contextId)).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired
+      code: ErrorCode.CartContextExpired,
     });
   });
 
@@ -56,7 +56,7 @@ describe("InMemorySalesforceCartClient", () => {
       productId: "internet-1gb",
       name: "1Gb Fiber Internet",
       quantity: 1,
-      unitPrice: 80
+      unitPrice: 80,
     });
 
     expect(added.cart.items).toEqual([
@@ -65,15 +65,15 @@ describe("InMemorySalesforceCartClient", () => {
         productId: "internet-1gb",
         name: "1Gb Fiber Internet",
         quantity: 1,
-        unitPrice: 80
-      }
+        unitPrice: 80,
+      },
     ]);
     expect(added.cart.totals).toEqual({ itemCount: 1, subtotal: 80 });
 
     const updated = await client.updateCartItemQuantity(
       created.contextId,
       "item_1",
-      { quantity: 2 }
+      { quantity: 2 },
     );
 
     expect(updated.cart.items[0]).toMatchObject({ quantity: 2 });
@@ -91,7 +91,7 @@ describe("InMemorySalesforceCartClient", () => {
       productId: "internet-1gb",
       name: "1Gb Fiber Internet",
       quantity: 1,
-      unitPrice: 80
+      unitPrice: 80,
     });
 
     now = new Date("2026-05-12T18:01:00.000Z");
@@ -101,22 +101,22 @@ describe("InMemorySalesforceCartClient", () => {
         productId: "mobile-unlimited",
         name: "Unlimited Mobile",
         quantity: 1,
-        unitPrice: 45
-      })
+        unitPrice: 45,
+      }),
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired
+      code: ErrorCode.CartContextExpired,
     });
     await expect(
       client.updateCartItemQuantity(created.contextId, "item_1", {
-        quantity: 3
-      })
+        quantity: 3,
+      }),
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired
+      code: ErrorCode.CartContextExpired,
     });
     await expect(
-      client.removeCartItem(created.contextId, "item_1")
+      client.removeCartItem(created.contextId, "item_1"),
     ).rejects.toMatchObject({
-      code: ErrorCode.CartContextExpired
+      code: ErrorCode.CartContextExpired,
     });
 
     now = new Date("2026-05-12T18:00:30.000Z");
@@ -129,15 +129,15 @@ describe("InMemorySalesforceCartClient", () => {
 
     await expect(
       client.updateCartItemQuantity(created.contextId, "item_missing", {
-        quantity: 2
-      })
+        quantity: 2,
+      }),
     ).rejects.toMatchObject({
-      code: ErrorCode.CartItemNotFound
+      code: ErrorCode.CartItemNotFound,
     });
     await expect(
-      client.removeCartItem(created.contextId, "item_missing")
+      client.removeCartItem(created.contextId, "item_missing"),
     ).rejects.toMatchObject({
-      code: ErrorCode.CartItemNotFound
+      code: ErrorCode.CartItemNotFound,
     });
   });
 });

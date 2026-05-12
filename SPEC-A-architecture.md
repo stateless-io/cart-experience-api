@@ -2,7 +2,7 @@
 sourceDocument: prd.md
 artifactType: architecture
 project_name: Telecom Cart Experience API
-date: '2026-05-12'
+date: "2026-05-12"
 status: draft
 ---
 
@@ -205,4 +205,3 @@ Time-dependent expiry tests should use an injectable clock or equivalent determi
 - Multi-tenant account model.
 - Production deployment, logging, tracing, or metrics platform.
 - Promotions, taxes, inventory, shipping, payment, and order submission.
-
